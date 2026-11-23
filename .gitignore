@@ -1,0 +1,7 @@
+# Material en bruto: ~230 MB que el sitio no usa (be006f.tif + .zip + __MACOSX)
+/imagenes/
+
+# Basura de sistema
+__MACOSX/
+.DS_Store
+Thumbs.db

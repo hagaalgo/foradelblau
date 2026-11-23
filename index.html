@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Carta</title><!-- TODO: nombre del restaurante -->
+<meta name="description" content="Consulta nuestra carta: take away, desayunos y entrepanes de la semana.">
+<meta name="theme-color" content="#000000">
+<meta property="og:title" content="Carta"><!-- TODO -->
+<meta property="og:image" content="assets/bg-desktop.webp"><!-- TODO: URL absoluta al publicar -->
+
+<link rel="preload" href="assets/gibson-thin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/bg-mobile.webp" as="image" media="(max-width: 899px)">
+
+<style>
+@font-face{
+  font-family:"Gibson Thin";
+  src:url("assets/gibson-thin.woff2") format("woff2");
+  font-weight:100; font-style:normal; font-display:swap;
+}
+*{box-sizing:border-box;margin:0}
+html{background:#000}
+body{
+  min-height:100vh; min-height:100dvh; background:#000; color:#fff;
+  font-family:"Gibson Thin","Lato","Helvetica Neue",Arial,sans-serif; font-weight:100;
+  -webkit-font-smoothing:antialiased;
+}
+.hero{position:relative; min-height:100vh; min-height:100dvh; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end}
+.bg{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 50%; z-index:0}
+.hero::after{ /* degradado para legibilidad de la fuente fina */
+  content:""; position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(to top, rgba(0,0,0,.7) 0%, rgba(0,0,0,.35) 35%, transparent 60%);
+}
+.menu{
+  position:relative; z-index:2; width:100%; max-width:380px; margin:0 auto;
+  padding:0 24px calc(48px + env(safe-area-inset-bottom));
+  display:flex; flex-direction:column; gap:32px; list-style:none;
+}
+.menu a{
+  display:flex; align-items:center; height:48px; padding:0 20px;
+  border:1.5px solid rgba(255,255,255,.9); border-radius:999px;
+  color:#fff; text-decoration:none; font-size:18px; letter-spacing:.1em; white-space:nowrap;
+  transition:background .2s, color .2s;
+}
+.menu a:hover{background:rgba(255,255,255,.14)}
+.menu a:active{background:#fff; color:#000}
+.menu a:focus-visible{outline:2px solid #fff; outline-offset:4px}
+.sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+@media (max-width:360px){ .menu{gap:24px} .menu a{font-size:16px; letter-spacing:.08em} }
+@media (min-width:900px){ .bg{object-position:50% 35%} .menu{padding-bottom:64px} }
+@media (prefers-reduced-motion:reduce){ .menu a{transition:none} }
+</style>
+</head>
+<body>
+<main class="hero">
+  <h1 class="sr-only">Carta</h1><!-- TODO: nombre del restaurante -->
+  <picture>
+    <source media="(min-width:900px)" srcset="assets/bg-desktop.webp">
+    <img class="bg" src="assets/bg-mobile.webp" alt="" fetchpriority="high" decoding="async">
+  </picture>
+
+  <!-- TODO: reemplazar href por las URLs reales (PDF / Drive / pedido online) -->
+  <ul class="menu">
+    <li><a href="#take-away"  rel="noopener">Take away</a></li>
+    <li><a href="#desayunos"  rel="noopener">Desayunos</a></li>
+    <li><a href="#entrepanes" rel="noopener">Entrepanes de la semana</a></li>
+  </ul>
+</main>
+</body>
+</html>
