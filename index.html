@@ -48,7 +48,43 @@ body{
 .sr-only{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 @media (max-width:360px){ .menu{gap:24px} .menu a{font-size:16px; letter-spacing:.08em} }
 @media (min-width:900px){ .bg{object-position:50% 35%} .menu{padding-bottom:64px} }
-@media (prefers-reduced-motion:reduce){ .menu a{transition:none} }
+
+/* Panel off-canvas: la carta se abre encima de la portada, sin salir del sitio */
+.panel{position:fixed; inset:0; z-index:20; visibility:hidden; transition:visibility 0s .4s}
+.panel[data-open="true"]{visibility:visible; transition-delay:0s}
+.panel__backdrop{
+  position:absolute; inset:0; background:rgba(0,0,0,.65);
+  opacity:0; transition:opacity .3s; cursor:pointer;
+}
+.panel[data-open="true"] .panel__backdrop{opacity:1}
+.panel__sheet{
+  position:absolute; top:0; right:0; bottom:0; width:min(760px,100%);
+  display:flex; flex-direction:column; background:#0b0b0b;
+  border-left:1px solid rgba(255,255,255,.14);
+  transform:translateX(100%); transition:transform .4s cubic-bezier(.22,.61,.36,1);
+}
+.panel[data-open="true"] .panel__sheet{transform:translateX(0)}
+.panel__bar{
+  flex:none; display:flex; align-items:center; gap:14px;
+  padding:calc(10px + env(safe-area-inset-top)) 14px 10px 20px;
+  border-bottom:1px solid rgba(255,255,255,.14);
+}
+.panel__title{font-size:15px; font-weight:100; letter-spacing:.16em; text-transform:uppercase; margin-right:auto}
+.panel__direct{font-size:13px; color:rgba(255,255,255,.72); letter-spacing:.04em; text-underline-offset:3px}
+.panel__direct:hover{color:#fff}
+.panel__close{
+  flex:none; width:40px; height:40px; display:grid; place-items:center;
+  background:transparent; border:1px solid rgba(255,255,255,.4); border-radius:999px;
+  color:#fff; font:inherit; font-size:22px; line-height:1; cursor:pointer;
+}
+.panel__close:hover{background:rgba(255,255,255,.14)}
+.panel__direct:focus-visible,.panel__close:focus-visible{outline:2px solid #fff; outline-offset:3px}
+.panel__body{flex:1; min-height:0; background:#1a1a1a}
+.panel__frame{display:block; width:100%; height:100%; border:0; background:#fff}
+body.is-locked{overflow:hidden}
+@media (prefers-reduced-motion:reduce){
+  .menu a,.panel,.panel__backdrop,.panel__sheet{transition:none}
+}
 </style>
 </head>
 <body>
@@ -60,11 +96,94 @@ body{
   </picture>
 
   <ul class="menu">
-    <li><a href="assets/take-away.pdf" target="_blank" rel="noopener" type="application/pdf" aria-label="Take away, PDF, se abre en una pestaña nueva">Take away</a></li>
-    <li><a href="assets/desayunos.pdf" target="_blank" rel="noopener" type="application/pdf" aria-label="Desayunos, PDF, se abre en una pestaña nueva">Desayunos</a></li>
+    <li><a href="assets/take-away.pdf" data-pdf="Take away" target="_blank" rel="noopener" type="application/pdf" aria-label="Take away, carta en PDF">Take away</a></li>
+    <li><a href="assets/desayunos.pdf" data-pdf="Desayunos" target="_blank" rel="noopener" type="application/pdf" aria-label="Desayunos, carta en PDF">Desayunos</a></li>
     <!-- TODO: falta el PDF de entrepanes -->
     <li><a href="#entrepanes">Entrepanes de la semana</a></li>
   </ul>
 </main>
+
+<div class="panel" id="carta-panel" data-open="false" aria-hidden="true">
+  <div class="panel__backdrop" data-close></div>
+  <section class="panel__sheet" role="dialog" aria-modal="true" aria-labelledby="carta-panel-title">
+    <header class="panel__bar">
+      <h2 class="panel__title" id="carta-panel-title">Carta</h2>
+      <a class="panel__direct" id="carta-panel-direct" href="assets/take-away.pdf" target="_blank" rel="noopener">Abrir en pestaña nueva</a>
+      <button class="panel__close" type="button" data-close aria-label="Cerrar la carta">&#215;</button>
+    </header>
+    <div class="panel__body">
+      <iframe class="panel__frame" id="carta-panel-frame" title="Carta en PDF"></iframe>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  var panel = document.getElementById('carta-panel');
+  var frame = document.getElementById('carta-panel-frame');
+  var titleEl = document.getElementById('carta-panel-title');
+  var direct = document.getElementById('carta-panel-direct');
+  var sheet = panel.querySelector('.panel__sheet');
+  var closeBtn = panel.querySelector('.panel__close');
+  var lastFocus = null;
+  var pushed = false;
+  var pendingBack = 0;
+
+  // iOS no pinta PDFs dentro de un iframe: allí se deja el enlace nativo.
+  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) return;
+
+  function open(link) {
+    var src = link.getAttribute('href');
+    if (frame.getAttribute('src') !== src) frame.setAttribute('src', src);
+    frame.setAttribute('title', link.getAttribute('data-pdf') + ' en PDF');
+    titleEl.textContent = link.getAttribute('data-pdf');
+    direct.setAttribute('href', src);
+    lastFocus = link;
+    panel.setAttribute('data-open', 'true');
+    panel.removeAttribute('aria-hidden');
+    document.body.classList.add('is-locked');
+    closeBtn.focus();
+    if (!pushed) { history.pushState({ panel: true }, ''); pushed = true; }
+  }
+
+  function close(fromHistory) {
+    panel.setAttribute('data-open', 'false');
+    panel.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('is-locked');
+    if (lastFocus) lastFocus.focus();
+    if (!fromHistory && pushed) { pushed = false; pendingBack++; history.back(); }
+  }
+
+  window.addEventListener('popstate', function () {
+    // El `history.back()` que lanzamos nosotros no debe cerrar un panel reabierto.
+    if (pendingBack > 0) { pendingBack--; return; }
+    if (!pushed) return;
+    pushed = false;
+    close(true);
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll('a[data-pdf]'), function (link) {
+    link.addEventListener('click', function (e) {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      open(link);
+    });
+  });
+
+  panel.addEventListener('click', function (e) {
+    if (e.target.closest('[data-close]')) close();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (panel.getAttribute('data-open') !== 'true') return;
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    var f = sheet.querySelectorAll('a[href], button:not([disabled])');
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+})();
+</script>
 </body>
 </html>
