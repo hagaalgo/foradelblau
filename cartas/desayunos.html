@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Desayunos · Carta de Popina</title>
+<meta name="description" content="Carta de desayunos de Popina: flautas de queso, fuet, pavo y jamón, cocas de bacon, bikini, sobrasada y miel, tortilla y pan de virutas de ibérico.">
+<meta name="theme-color" content="#013668">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Desayunos · Carta de Popina">
+<meta property="og:description" content="Flautas, cocas y suplementos para la tortilla. La carta de desayunos de Popina.">
+<meta property="og:image" content="../assets/cartas/desayunos-portada-1500.webp"><!-- TODO: URL absoluta al publicar -->
+<meta property="og:locale" content="es_ES">
+
+<link rel="preload" href="../assets/gibson-thin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/cartas.css">
+<script>
+  if (new URLSearchParams(location.search).has('embed')) {
+    document.documentElement.classList.add('is-embed');
+  }
+</script>
+</head>
+<body style="--ink:#013668;--muted:#2b5a86;--faint:#4a6a86;--heading:#173053;--legend:#21409a;--badge:#013668;--course-line:#173053;--page:#eef2f7;--line:rgba(1,54,104,.18)">
+<a class="skip" href="#carta">Ir a la carta</a>
+
+<header class="brandbar">
+  <a class="brandbar__brand" href="../index.html">Popina</a>
+  <a class="brandbar__link" href="../index.html">Cartas</a>
+  <a class="brandbar__link" href="../assets/desayunos.pdf" download>Descargar PDF</a>
+</header>
+
+<main>
+  <div class="hero hero--wide">
+    <img class="hero__img" src="../assets/cartas/desayunos-portada-1500.webp"
+         srcset="../assets/cartas/desayunos-portada-1000.webp 1000w, ../assets/cartas/desayunos-portada-1500.webp 1500w"
+         sizes="100vw" alt="" width="1500" height="1000" fetchpriority="high" decoding="async">
+    <div class="hero__shade"></div>
+    <h1 class="hero__title hero__title--wordmark">
+      <span class="sr-only">Déjeuner</span>
+      <img class="hero__wordmark" src="../assets/cartas/desayunos-titulo-750.webp"
+           srcset="../assets/cartas/desayunos-titulo-480.webp 480w, ../assets/cartas/desayunos-titulo-750.webp 750w"
+           sizes="(min-width: 1412px) 480px, 34vw" alt="" width="750" height="163" decoding="async">
+    </h1>
+  </div>
+
+  <div class="sheet">
+    <section class="section" id="carta" aria-label="Carta de desayunos">
+      <p class="legend">
+        <span class="legend__item"><span class="badge" aria-hidden="true">F</span>Frío</span>
+        <span class="legend__item"><span class="badge" aria-hidden="true">C</span>Caliente</span>
+      </p>
+
+      <div class="courses courses--split">
+        <section class="course" aria-labelledby="course-flautas">
+          <div class="course__head">
+            <h2 class="course__title" id="course-flautas">Flautas</h2>
+            <span class="badge" title="Frío">F</span>
+          </div>
+          <ul class="dishes">
+            <li class="dish">
+              <div class="dish__head">
+                <h3 class="dish__name">Queso</h3>
+                <p class="dish__price"><data value="2.60">2,60&nbsp;€</data></p>
+              </div>
+              <p class="dish__note">manchego, con pan tomate, aceite de oliva</p>
+            </li>
+            <li class="dish">
+              <div class="dish__head">
+                <h3 class="dish__name">Fuet</h3>
+                <p class="dish__price"><data value="2.60">2,60&nbsp;€</data></p>
+              </div>
+            </li>
+            <li class="dish">
+              <div class="dish__head">
+                <h3 class="dish__name">Pavo y queso</h3>
+                <p class="dish__price"><data value="3.10">3,10&nbsp;€</data></p>
+              </div>
+            </li>
+            <li class="dish">
+              <div class="dish__head">
+                <h3 class="dish__name">Jamón</h3>
+                <p class="dish__price"><data value="3.10">3,10&nbsp;€</data></p>
+              </div>
+              <p class="dish__note">ibérico en virutas</p>
+            </li>
+          </ul>
+        </section>
+
+        <section class="course" aria-labelledby="course-coca">
+          <div class="course__head">
+            <h2 class="course__title" id="course-coca">Coca</h2>
+            <span class="badge" title="Caliente">C</span>
+          </div>
+          <ul class="dishes">
+            <li class="dish">
+              <div class="dish__head">
+                <h3 class="dish__name">Bacon</h3>
+                <p class="dish__price"><data value="4.10">4,10&nbsp;€</data></p>
+              </div>
+              <p class="dish__note">cebolla confitada, queso y mostaza</p>
+            </li>
+            <li class="dish">
+              <div class="dish__head">
+                <h3 class="dish__name">Bikini</h3>
+                <p class="dish__price"><data value="3.60">3,60&nbsp;€</data></p>
+              </div>
+            </li>
+            <li class="dish">
+              <div class="dish__head">
+                <h3 class="dish__name">Sobrasada y miel</h3>
+                <p class="dish__price"><data value="3.60">3,60&nbsp;€</data></p>
+              </div>
+            </li>
+            <li class="dish">
+              <div class="dish__head">
+                <h3 class="dish__name">Tortilla</h3>
+                <p class="dish__price"><data value="3.60">3,60&nbsp;€</data></p>
+              </div>
+              <p class="dish__note">de huevos felices</p>
+            </li>
+            <li class="dish">
+              <div class="dish__head">
+                <h3 class="dish__name">Pan</h3>
+                <p class="dish__price"><data value="4.10">4,10&nbsp;€</data></p>
+              </div>
+              <p class="dish__note">de virutas de ibérico</p>
+            </li>
+          </ul>
+        </section>
+      </div>
+
+      <section class="supplements" aria-labelledby="suplementos">
+        <h2 class="supplements__title" id="suplementos">Suplementos</h2>
+        <p class="supplements__hint">para la tortilla</p>
+        <ul class="supplements__list">
+          <li>Queso <data value="0.50">0,50&nbsp;€</data></li>
+          <li>Cebolla <data value="0.50">0,50&nbsp;€</data></li>
+          <li>Bacon <data value="0.50">0,50&nbsp;€</data></li>
+        </ul>
+      </section>
+    </section>
+
+    <footer class="footer">
+      <p class="footer__thanks">Gracias.</p>
+    </footer>
+  </div>
+</main>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Menu",
+  "name": "Desayunos de Popina",
+  "inLanguage": "es",
+  "hasMenuSection": [
+    {
+      "@type": "MenuSection",
+      "name": "Flautas (frío)",
+      "hasMenuItem": [
+        { "@type": "MenuItem", "name": "Queso", "description": "manchego, con pan tomate, aceite de oliva", "offers": { "@type": "Offer", "price": "2.60", "priceCurrency": "EUR" } },
+        { "@type": "MenuItem", "name": "Fuet", "offers": { "@type": "Offer", "price": "2.60", "priceCurrency": "EUR" } },
+        { "@type": "MenuItem", "name": "Pavo y queso", "offers": { "@type": "Offer", "price": "3.10", "priceCurrency": "EUR" } },
+        { "@type": "MenuItem", "name": "Jamón", "description": "ibérico en virutas", "offers": { "@type": "Offer", "price": "3.10", "priceCurrency": "EUR" } }
+      ]
+    },
+    {
+      "@type": "MenuSection",
+      "name": "Coca (caliente)",
+      "hasMenuItem": [
+        { "@type": "MenuItem", "name": "Bacon", "description": "cebolla confitada, queso y mostaza", "offers": { "@type": "Offer", "price": "4.10", "priceCurrency": "EUR" } },
+        { "@type": "MenuItem", "name": "Bikini", "offers": { "@type": "Offer", "price": "3.60", "priceCurrency": "EUR" } },
+        { "@type": "MenuItem", "name": "Sobrasada y miel", "offers": { "@type": "Offer", "price": "3.60", "priceCurrency": "EUR" } },
+        { "@type": "MenuItem", "name": "Tortilla", "description": "de huevos felices", "offers": { "@type": "Offer", "price": "3.60", "priceCurrency": "EUR" } },
+        { "@type": "MenuItem", "name": "Pan", "description": "de virutas de ibérico", "offers": { "@type": "Offer", "price": "4.10", "priceCurrency": "EUR" } }
+      ]
+    },
+    {
+      "@type": "MenuSection",
+      "name": "Suplementos para la tortilla",
+      "hasMenuItem": [
+        { "@type": "MenuItem", "name": "Queso", "offers": { "@type": "Offer", "price": "0.50", "priceCurrency": "EUR" } },
+        { "@type": "MenuItem", "name": "Cebolla", "offers": { "@type": "Offer", "price": "0.50", "priceCurrency": "EUR" } },
+        { "@type": "MenuItem", "name": "Bacon", "offers": { "@type": "Offer", "price": "0.50", "priceCurrency": "EUR" } }
+      ]
+    }
+  ]
+}
+</script>
+</body>
+</html>

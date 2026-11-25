@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Carta</title><!-- TODO: nombre del restaurante -->
+<title>Popina · Carta</title>
 <meta name="description" content="Consulta nuestra carta: take away, desayunos y entrepanes de la semana.">
 <meta name="theme-color" content="#000000">
-<meta property="og:title" content="Carta"><!-- TODO -->
+<meta property="og:title" content="Popina · Carta">
 <meta property="og:image" content="assets/bg-desktop.webp"><!-- TODO: URL absoluta al publicar -->
 
 <link rel="preload" href="assets/gibson-thin.woff2" as="font" type="font/woff2" crossorigin>
@@ -69,11 +69,11 @@ body{
   padding:calc(10px + env(safe-area-inset-top)) 14px 10px 20px;
   border-bottom:1px solid rgba(255,255,255,.14);
 }
-.panel__title{font-size:15px; font-weight:100; letter-spacing:.16em; text-transform:uppercase; margin-right:auto}
-.panel__direct{font-size:13px; color:rgba(255,255,255,.72); letter-spacing:.04em; text-underline-offset:3px}
+.panel__title{font-size:15px; font-weight:100; letter-spacing:.16em; text-transform:uppercase; margin-right:auto; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.panel__direct{display:inline-flex; align-items:center; justify-content:center; min-width:44px; min-height:44px; font-size:13px; color:rgba(255,255,255,.72); letter-spacing:.04em; text-underline-offset:3px}
 .panel__direct:hover{color:#fff}
 .panel__close{
-  flex:none; width:40px; height:40px; display:grid; place-items:center;
+  flex:none; width:44px; height:44px; display:grid; place-items:center;
   background:transparent; border:1px solid rgba(255,255,255,.4); border-radius:999px;
   color:#fff; font:inherit; font-size:22px; line-height:1; cursor:pointer;
 }
@@ -89,16 +89,16 @@ body.is-locked{overflow:hidden}
 </head>
 <body>
 <main class="hero">
-  <h1 class="sr-only">Carta</h1><!-- TODO: nombre del restaurante -->
+  <h1 class="sr-only">Popina</h1>
   <picture>
     <source media="(min-width:900px)" srcset="assets/bg-desktop.webp">
     <img class="bg" src="assets/bg-mobile.webp" alt="" fetchpriority="high" decoding="async">
   </picture>
 
   <ul class="menu">
-    <li><a href="assets/take-away.pdf" data-pdf="Take away" target="_blank" rel="noopener" type="application/pdf" aria-label="Take away, carta en PDF">Take away</a></li>
-    <li><a href="assets/desayunos.pdf" data-pdf="Desayunos" target="_blank" rel="noopener" type="application/pdf" aria-label="Desayunos, carta en PDF">Desayunos</a></li>
-    <!-- TODO: falta el PDF de entrepanes -->
+    <li><a href="cartas/take-away.html" data-carta="cartas/take-away.html" data-title="Take away" data-pdf="assets/take-away.pdf" target="_blank" rel="noopener">Take away</a></li>
+    <li><a href="cartas/desayunos.html" data-carta="cartas/desayunos.html" data-title="Desayunos" data-pdf="assets/desayunos.pdf" target="_blank" rel="noopener">Desayunos</a></li>
+    <!-- TODO: falta la carta de entrepanes -->
     <li><a href="#entrepanes">Entrepanes de la semana</a></li>
   </ul>
 </main>
@@ -108,11 +108,12 @@ body.is-locked{overflow:hidden}
   <section class="panel__sheet" role="dialog" aria-modal="true" aria-labelledby="carta-panel-title">
     <header class="panel__bar">
       <h2 class="panel__title" id="carta-panel-title">Carta</h2>
-      <a class="panel__direct" id="carta-panel-direct" href="assets/take-away.pdf" target="_blank" rel="noopener">Abrir en pestaña nueva</a>
+      <a class="panel__direct" id="carta-panel-direct" href="cartas/take-away.html" target="_blank" rel="noopener">Abrir</a>
+      <a class="panel__direct" id="carta-panel-pdf" href="assets/take-away.pdf" target="_blank" rel="noopener">PDF</a>
       <button class="panel__close" type="button" data-close aria-label="Cerrar la carta">&#215;</button>
     </header>
     <div class="panel__body">
-      <iframe class="panel__frame" id="carta-panel-frame" title="Carta en PDF"></iframe>
+      <iframe class="panel__frame" id="carta-panel-frame" title="Carta"></iframe>
     </div>
   </section>
 </div>
@@ -123,21 +124,38 @@ body.is-locked{overflow:hidden}
   var frame = document.getElementById('carta-panel-frame');
   var titleEl = document.getElementById('carta-panel-title');
   var direct = document.getElementById('carta-panel-direct');
+  var pdf = document.getElementById('carta-panel-pdf');
   var sheet = panel.querySelector('.panel__sheet');
   var closeBtn = panel.querySelector('.panel__close');
   var lastFocus = null;
   var pushed = false;
   var pendingBack = 0;
+  var currentSrc = '';
 
-  // iOS no pinta PDFs dentro de un iframe: allí se deja el enlace nativo.
-  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) return;
+  // Navegar el iframe con location.replace evita que cada carta añada una
+  // entrada de historial propia y se coma el "atrás" del panel.
+  function loadCarta(page) {
+    var url = page + '?embed=1';
+    if (url === currentSrc) return;
+    currentSrc = url;
+    var win = frame.contentWindow;
+    var blank = true;
+    try { blank = !win.location.href || win.location.href === 'about:blank'; } catch (err) { blank = true; }
+    if (blank) {
+      frame.setAttribute('src', url);
+      return;
+    }
+    try { win.location.replace(url); } catch (err) { frame.setAttribute('src', url); }
+  }
 
   function open(link) {
-    var src = link.getAttribute('href');
-    if (frame.getAttribute('src') !== src) frame.setAttribute('src', src);
-    frame.setAttribute('title', link.getAttribute('data-pdf') + ' en PDF');
-    titleEl.textContent = link.getAttribute('data-pdf');
-    direct.setAttribute('href', src);
+    var page = link.getAttribute('data-carta');
+    loadCarta(page);
+    var title = link.getAttribute('data-title');
+    frame.setAttribute('title', title + ', carta');
+    titleEl.textContent = title;
+    direct.setAttribute('href', page);
+    pdf.setAttribute('href', link.getAttribute('data-pdf'));
     lastFocus = link;
     panel.setAttribute('data-open', 'true');
     panel.removeAttribute('aria-hidden');
@@ -162,7 +180,7 @@ body.is-locked{overflow:hidden}
     close(true);
   });
 
-  Array.prototype.forEach.call(document.querySelectorAll('a[data-pdf]'), function (link) {
+  Array.prototype.forEach.call(document.querySelectorAll('a[data-carta]'), function (link) {
     link.addEventListener('click', function (e) {
       if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
       e.preventDefault();
